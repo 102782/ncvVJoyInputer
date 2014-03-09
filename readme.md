@@ -33,9 +33,9 @@
 [License.txt](https://github.com/102782/ncvVJoyInputer/blob/master/License.txt) をご参照ください。
 
 
-##連絡先
-[https://twitter.com/102782](https://twitter.com/102782)
-
-
 ##お世話になった方々
 ncvSample2 プラグインの雛形第2版作者　うつろ様
+
+
+##連絡先
+[https://twitter.com/102782](https://twitter.com/102782)
