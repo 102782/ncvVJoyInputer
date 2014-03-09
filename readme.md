@@ -35,3 +35,7 @@
 
 ##連絡先
 [https://twitter.com/102782](https://twitter.com/102782)
+
+
+##お世話になった方々
+ncvSample2 プラグインの雛形第2版作者　うつろ様
