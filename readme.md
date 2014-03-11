@@ -21,13 +21,17 @@
 にて動作を確認しています。
 
 
-##vJoyの設定についての補足
+##vJoyについての補足
 
 * ボタン数は1から32個に対応
 * POV Hat Switch 4 Directions 1つが十字キーに対応
 * Basic Axis X と Basic Axis Y が左スティックのX軸とY軸に対応
 * Basic Axis Z と Basic Axis Rz が右スティックのX軸とY軸に対応
 
+* vJoyの有効/無効を切り替えたい場合は Windows Driver Kit (WDK) 8 または 8.1 に含まれる 
+[Devcon.exe](http://msdn.microsoft.com/en-us/library/windows/hardware/ff544707(v=vs.85).aspx)
+ を使えとのこと（[公式のフォーラムより](http://vjoystick.sourceforge.net/site/index.php/forum/4-Help/454-enable-disable-vjoy-driver-from-shell-command)）  
+ ※有効/無効を切り替える際には管理者権限が必要（cmd.exeを管理者権限で実行する必要がある）
 
 ##ライセンス
 [License.txt](https://github.com/102782/ncvVJoyInputer/blob/master/License.txt) をご参照ください。
