@@ -7,6 +7,7 @@ using System.Collections;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
+using System.Threading.Tasks;
 
 
 namespace JoyInputer
@@ -21,7 +22,9 @@ namespace JoyInputer
         private List<Inputer> axis;
         private List<Inputer> pov;
         private SimpleQueue<string> sourceQueue;
-        private Thread thread;
+        private Task task;
+        private CancellationTokenSource tokenSource;
+        private CancellationToken token;
         private long axisMaxValue;
 
         public bool isInitializedVJoy { get; private set; }
@@ -37,13 +40,13 @@ namespace JoyInputer
         {
             this.isInitializedVJoy = false;
             this.logger.Add(SimpleLogger.TAG.INFO, "Begin: Initialize VJoyController");
-            if (!File.Exists(installedDir + "/vJoyInterface.dll"))
+            if (!File.Exists(Path.Combine(installedDir, "vJoyInterface.dll")))
             {
                 this.logger.Add(SimpleLogger.TAG.ERROR, installedDir + "vJoyInterface.dll not found.Exit!");
                 return this.isInitializedVJoy;
             }
 
-            if (!File.Exists(installedDir + "/vJoyInterfaceWrap.dll"))
+            if (!File.Exists(Path.Combine(installedDir, "vJoyInterfaceWrap.dll")))
             {
                 this.logger.Add(SimpleLogger.TAG.ERROR, installedDir + "vJoyInterfaceWrap.dll not found.Exit!");
                 return this.isInitializedVJoy;
@@ -108,9 +111,10 @@ namespace JoyInputer
             this.axis = axisPatterns.Select((p, i) => { return new Inputer(i, axisSetting[i], TimeSpan.FromMilliseconds(0), p); }).ToList<Inputer>();
             this.pov = povPatterns.Select((p, i) => { return new Inputer(i, discPovExist, TimeSpan.FromMilliseconds(0), p); }).ToList<Inputer>();
 
-            this.thread = new Thread(new ThreadStart(this.Update));
-            this.thread.Start();
-            this.logger.Add(SimpleLogger.TAG.INFO, string.Format("Start: Thread, {0}", this.thread.ThreadState));
+            this.tokenSource = new CancellationTokenSource();
+            this.token = this.tokenSource.Token;
+            this.task = Task.Factory.StartNew(this.Update, this.token);
+            this.logger.Add(SimpleLogger.TAG.INFO, string.Format("Start: Task, {0}", this.task.Status));
             this.timer.Start();
         }
 
@@ -122,9 +126,20 @@ namespace JoyInputer
             }
 
             this.timer.Stop();
-            this.thread.Abort();
-            this.thread.Join();
-            this.logger.Add(SimpleLogger.TAG.INFO, string.Format("Abort: Thread, {0}", this.thread.ThreadState));
+            this.tokenSource.Cancel();
+            try
+            {
+                this.task.Wait();
+            }
+            catch (AggregateException exception)
+            {
+                foreach (var e in exception.InnerExceptions)
+                {
+                    this.logger.Add(SimpleLogger.TAG.INFO, string.Format("{0}, {1}", e.Message, this.task.Status));
+                }
+                
+            }
+            this.logger.Add(SimpleLogger.TAG.INFO, string.Format("Abort: Task, {0}", this.task.Status));
 
             this.vjoy.Relinquish();
             this.isInitializedVJoy = false;
@@ -173,10 +188,20 @@ namespace JoyInputer
                 return;
             }
 
+            if (this.token.IsCancellationRequested)
+            {
+                this.token.ThrowIfCancellationRequested();
+            }
+
             while(true)
             {
                 this.vjoy.ResetInput();
                 this.vjoy.InputAxis2Y((int)(this.axisMaxValue / 2));
+
+                if (this.token.IsCancellationRequested)
+                {
+                    this.token.ThrowIfCancellationRequested();
+                }
 
                 string source = "";
 

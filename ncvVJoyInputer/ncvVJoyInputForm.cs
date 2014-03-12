@@ -143,7 +143,7 @@ namespace ncvVJoyInputer
 
             this.button1.Enabled = false;
 
-            //this.logger.Save(this.installDirectry);
+            //this.logger.Save(this.installDirectry, "ncvVJoyInputer_Log.txt");
         }
 
         /// <summary>

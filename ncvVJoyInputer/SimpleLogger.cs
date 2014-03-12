@@ -31,9 +31,9 @@ namespace JoyInputer
             }
         }
 
-        public void Save(string path)
+        public void Save(string path, string fileName)
         {
-            using (StreamWriter w = new StreamWriter(Path.Combine(path, "log.txt"), true, Encoding.UTF8))
+            using (StreamWriter w = new StreamWriter(Path.Combine(path, fileName), true, Encoding.UTF8))
             {
                 this.logs.Select(t => { w.WriteLine(t); return t; }).ToArray();
             }
