@@ -11,7 +11,7 @@ namespace ncvVJoyInputer
     [Serializable]
     public class VJoyInputerConfigData
     {
-        public int span = 500;
+        public int span = 20;
         public string[] buttons = new string[32] 
         { 
             "^B$", "^A$", "^Y$", "^X$", "^L1$", "^L2$", "^R1$", "^R2$", 
@@ -79,7 +79,7 @@ namespace ncvVJoyInputer
             source.pov.Select((c, i) => { destination.pov[i] = c; return c; }).ToArray();
         }
 
-        public void DefaultTemporary()
+        public void SetDefaultToTemporary()
         {
             this.temporary = new VJoyInputerConfigData();
         }

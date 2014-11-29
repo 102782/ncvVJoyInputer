@@ -264,29 +264,39 @@ namespace ncvVJoyInputer
                     this.targetLabel = ht.Node.Parent.Text;
                 }
 
-                switch (this.targetLabel)
-                {
-                    case ("ボタン設定"):
-                        this.label2.Text = string.Format("ボタン{0}", this.targetIndex + 1);
-                        this.textBox1.Text = this.config.temporary.buttons[this.targetIndex];
-                        this.label3.Text = string.Format("コメントが指定した正規表現にマッチした時、\nボタン{0}の入力を送信します", this.targetIndex + 1);
-                        break;
-                    case ("スティック設定"):
-                        this.label2.Text = this.AXIS_LABELS[this.targetIndex];
-                        this.textBox1.Text = this.config.temporary.axis[this.targetIndex];
-                        this.label3.Text = string.Format("コメントが指定した正規表現にマッチした時、\n{0}の入力を送信します", this.AXIS_LABELS[this.targetIndex]);
-                        break;
-                    case ("十字キー設定"):
-                        this.label2.Text = this.POV_LABELS[this.targetIndex];
-                        this.textBox1.Text = this.config.temporary.pov[this.targetIndex];
-                        this.label3.Text = string.Format("コメントが指定した正規表現にマッチした時、\n{0}の入力を送信します", this.POV_LABELS[this.targetIndex]);
-                        break;
-                    default:
-                        this.label2.Text = "-";
-                        this.textBox1.Text = "";
-                        this.label3.Text = "-";
-                        break;
-                }
+                SetTargetRegex(this.targetLabel, this.targetIndex);
+            }
+        }
+
+        /// <summary>
+        /// 正規表現設定の反映
+        /// </summary>
+        /// <param name="label"></param>
+        /// <param name="index"></param>
+        private void SetTargetRegex(string label, int index)
+        {
+            switch (label)
+            {
+                case ("ボタン設定"):
+                    this.label2.Text = string.Format("ボタン{0}", index + 1);
+                    this.textBox1.Text = this.config.temporary.buttons[index];
+                    this.label3.Text = string.Format("コメントが指定した正規表現にマッチした時、\nボタン{0}の入力を送信します", this.targetIndex + 1);
+                    break;
+                case ("スティック設定"):
+                    this.label2.Text = this.AXIS_LABELS[index];
+                    this.textBox1.Text = this.config.temporary.axis[index];
+                    this.label3.Text = string.Format("コメントが指定した正規表現にマッチした時、\n{0}の入力を送信します", this.AXIS_LABELS[this.targetIndex]);
+                    break;
+                case ("十字キー設定"):
+                    this.label2.Text = this.POV_LABELS[index];
+                    this.textBox1.Text = this.config.temporary.pov[index];
+                    this.label3.Text = string.Format("コメントが指定した正規表現にマッチした時、\n{0}の入力を送信します", this.POV_LABELS[this.targetIndex]);
+                    break;
+                default:
+                    this.label2.Text = "-";
+                    this.textBox1.Text = "";
+                    this.label3.Text = "-";
+                    break;
             }
         }
 
@@ -332,7 +342,15 @@ namespace ncvVJoyInputer
         /// <param name="e"></param>
         private void button4_Click(object sender, EventArgs e)
         {
-            this.config.DefaultTemporary();
+            this.label2.Text = "-";
+            this.textBox1.Text = "";
+            this.label3.Text = "-";
+            this.config.SetDefaultToTemporary();
+
+            if (this.targetLevel == 1)
+            {
+                SetTargetRegex(this.targetLabel, this.targetIndex);
+            }
         }
     }
 }

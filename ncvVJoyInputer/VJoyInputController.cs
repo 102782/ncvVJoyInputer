@@ -193,6 +193,8 @@ namespace JoyInputer
                 this.token.ThrowIfCancellationRequested();
             }
 
+            string source = "";
+            TimeSpan now;
             while(true)
             {
                 this.vjoy.ResetInput();
@@ -203,19 +205,18 @@ namespace JoyInputer
                     this.token.ThrowIfCancellationRequested();
                 }
 
-                string source = "";
-
+                source = "";
                 if (this.sourceQueue.Any())
                 {
                     source = this.sourceQueue.Dequeue();
                 }
 
-                TimeSpan now = this.timer.Elapsed;
+                now = this.timer.Elapsed;
                 this.buttons.Where(_ => _.enable).Where(_ => _.Updated(now, this.span, source)).Select(_ => { InputButton(_.id); return _; }).ToArray();
                 this.axis.Where(_ => _.enable).Where(_ => _.Updated(now, this.span, source)).Select(_ => { InputAxis(_.id); return _; }).ToArray();
                 this.pov.Where(_ => _.enable).Where(_ => _.Updated(now, this.span, source)).Select(_ => { InputPOV(_.id); return _; }).ToArray();
 
-                Thread.Sleep(10);
+                Thread.Sleep(2);
             }
         }
 
