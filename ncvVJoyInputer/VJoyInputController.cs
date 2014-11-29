@@ -149,16 +149,20 @@ namespace JoyInputer
         private void InputButton(int id)
         {
             var target = this.buttons[id];
+#if DEBUG
             this.logger.Add(SimpleLogger.TAG.INFO, string.Format("Input: Button {0}, \"{1}\", {2} => {3}",
                 target.id, target.pattern, target.oldValue, target.value));
+#endif
             this.vjoy.InputButton(true, (uint)(target.id + 1));
         }
 
         private void InputAxis(int id)
         {
             var target = this.axis[id];
+#if DEBUG
             this.logger.Add(SimpleLogger.TAG.INFO, string.Format("Input: Axis {0}, \"{1}\", {2} => {3}",
                 target.id, target.pattern, target.oldValue, target.value));
+#endif
             switch (target.id)
             {
                 case 0: this.vjoy.InputAxis1Y(0); break;
@@ -176,8 +180,10 @@ namespace JoyInputer
         private void InputPOV(int id)
         {
             var target = this.pov[id];
+#if DEBUG
             this.logger.Add(SimpleLogger.TAG.INFO, string.Format("Input: POV {0}, \"{1}\", {2} => {3}",
                 target.id, target.pattern, target.oldValue, target.value));
+#endif
             this.vjoy.InputDiscPov(target.id);
         }
 

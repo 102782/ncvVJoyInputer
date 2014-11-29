@@ -142,8 +142,9 @@ namespace ncvVJoyInputer
             this.logger.Add(SimpleLogger.TAG.INFO, "DisConnected");
 
             this.button1.Enabled = false;
-
-            //this.logger.Save(this.installDirectry, "ncvVJoyInputer_Log.txt");
+#if DEBUG
+            this.logger.Save(this.installDirectry, "ncvVJoyInputer_Log.txt");
+#endif
         }
 
         /// <summary>
@@ -156,12 +157,16 @@ namespace ncvVJoyInputer
         {
             if (this.enableVJoy)
             {
+#if DEBUG
                 this.logger.Add(SimpleLogger.TAG.INFO, "Recived Count: " + e.CommentDataList.Count);
+#endif
                 if (e.CommentDataList.Any())
                 {
                     e.CommentDataList.Select((c) =>
                     {
+#if DEBUG
                         this.logger.Add(SimpleLogger.TAG.INFO, "Recived: " + c.Comment);
+#endif
                         this.vjoy.SetSource(c.Comment);
                         return c;
                     }).ToArray();
